@@ -6,25 +6,24 @@ import socket
 from dnslib import *
 
 HOST = "0.0.0.0"  # Standard loopback interface address (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+PORT = 53  # Port to listen on (non-privileged ports are > 1023)
 
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     s.bind((HOST, PORT))
-    s.listen()
-    conn, addr = s.accept()
-    with conn:
-        print(f"Connected by {addr}")
-        while True:
-            data = conn.recv(1024)
+    #s.listen()
+    #conn, addr = s.accept()
+    print(f"Connected by {HOST}, on port: {PORT}")
+    while True:
+        data = s.recv(1024)
 
-            dns_response = DNSRecord.parse(data)
+        dns_response = DNSRecord.parse(data)
 
-            print(dns_response)
+        print(dns_response)
 
-            if not data:
-                break
-            print(data)
-            conn.sendall(data)
+        if not data:
+            break
+        print(data)
+        s.sendall(data)
 
 
 # Need to work with DNS
