@@ -13,6 +13,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     print(f"Connected by {HOST}, on port: {PORT}")
 
     while True:
+        
         # changed to recvfrom to get src addr
         data, addr = s.recvfrom(1024)
         print(f"Received: {data} from {addr}")
