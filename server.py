@@ -5,26 +5,29 @@
 import socket
 from dnslib import *
 
-HOST = "0.0.0.0"  # Standard loopback interface address (localhost)
+HOST = "172.26.13.129"  # Standard loopback interface address (localhost)
 PORT = 53  # Port to listen on (non-privileged ports are > 1023)
 
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     s.bind((HOST, PORT))
-    #s.listen()
-    #conn, addr = s.accept()
     print(f"Connected by {HOST}, on port: {PORT}")
+
     while True:
-        data = s.recv(1024)
+        # changed to recvfrom to get src addr
+        data, addr = s.recvfrom(1024)
+        print(f"Received: {data} from {addr}")
 
-        dns_response = DNSRecord.parse(data)
+        dns_request = DNSRecord.parse(data)
 
-        print(dns_response)
+        print(dns_request)
 
         if not data:
             break
-        print(data)
-        s.sendall(data)
+
+        # Not send all just send back same request
+        s.sendto(data, addr)
 
 
 # Need to work with DNS
 # dnslib? dnspython?
+#172-26-13-129
