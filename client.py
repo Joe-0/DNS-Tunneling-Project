@@ -5,6 +5,7 @@
 import socket
 from dnslib import *
 
+SERVER_IP = "54.225.14.129"
 URL = "joe.unsatisfiable.net"  # The server's hostname or IP address (will need to be domain name)
 DNS_HOST = "8.8.8.8"
 PORT = 53  # The port used by the server
@@ -23,6 +24,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         # Should be same as what was sent
         data, addr = s.recvfrom(1024)
         print(f"Received data from {addr}: {data}")
+
+        dns_response = DNSRecord.parse(data)
+        print(f"DNS Data: {dns_response}")
 
 
         if user_input == "":
