@@ -4,7 +4,7 @@
 
 import socket
 
-HOST = "0.0.0.0"  # Standard loopback interface address (localhost)
+HOST = "172.26.13.129"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -14,6 +14,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     while True:
         data, addr = s.recvfrom(1024)
 
-        s.sendto(data, addr)
+        msg = bytes("Hello, Client", 'utf-8')
 
-        print(f"Received and echoed data from {addr}: {data.decode('utf-8')}")
+        s.sendto(msg, addr)
+
+        print(f"Received and sent data from {addr}: {msg.decode('utf-8')}")
