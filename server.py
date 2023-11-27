@@ -16,11 +16,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         
         # changed to recvfrom to get src addr
         data, addr = s.recvfrom(1024)
-        print(f"Received: {data} from {addr}")
+        #print(f"Received: {data} from {addr}")
 
         dns_request = DNSRecord.parse(data)
 
-        print(dns_request)
+        url = str(dns_request.q.qname)
+
+        subdomain = (url.split('.')[0]).lower()
+
+        print(subdomain)
 
         if not data:
             break
