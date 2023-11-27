@@ -6,7 +6,7 @@ import socket
 from dnslib import *
 
 SERVER_IP = "54.225.14.129"
-URL = "joe.unsatisfiable.net"  # The server's hostname or IP address (will need to be domain name)
+URL = "a.unsatisfiable.net"  # The server's hostname or IP address (will need to be domain name)
 DNS_HOST = "8.8.8.8"
 PORT = 53  # The port used by the server
 
