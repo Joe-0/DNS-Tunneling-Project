@@ -11,7 +11,7 @@ PORT = 53  # Port to listen on (non-privileged ports are > 1023)
 
 
 def get_html(url):
-    r = requests.get(url)
+    r = requests.get("https://" + url)
     return r.text
 
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -34,14 +34,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         if subdomain != subdomain_check:
             subdomain_check = subdomain
             new_subdomain = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):] # reinsert dots to url
-            new_data = get_html(url)
+            new_data = bytes(get_html(new_subdomain), 'utf-8')
         
 
         if not data:
             break
 
+        answer = dns_request.reply()
+        answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(new_data),ttl=60))
         # Not send all just send back same request
-        s.sendto(new_data, addr)
+        s.sendto(answer, addr)
 
 # Need to work with DNS
 # dnslib? dnspython?
