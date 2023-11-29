@@ -4,14 +4,21 @@
 
 import socket
 from dnslib import *
+import requests
 
 HOST = "172.26.13.129"  # Standard loopback interface address (localhost)
 PORT = 53  # Port to listen on (non-privileged ports are > 1023)
+
+
+def get_html(url):
+    r = requests.get(url)
+    return r.text
 
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     s.bind((HOST, PORT))
     print(f"Connected by {HOST}, on port: {PORT}")
 
+    subdomain_check = ""
     while True:
         
         # changed to recvfrom to get src addr
@@ -24,15 +31,22 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
         subdomain = (url.split('.')[0]).lower()
 
-        print(subdomain)
+        if subdomain != subdomain_check:
+            subdomain_check = subdomain
+            new_subdomain = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):] # reinsert dots to url
+            new_data = get_html(url)
+        
 
         if not data:
             break
 
         # Not send all just send back same request
-        s.sendto(data, addr)
-
+        s.sendto(new_data, addr)
 
 # Need to work with DNS
 # dnslib? dnspython?
 #172-26-13-129
+
+
+# Running terminal commands: https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
+# Preview HTML in Terminal: https://askubuntu.com/questions/58416/how-can-i-preview-html-documents-from-the-command-line
