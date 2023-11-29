@@ -36,3 +36,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     s.close()
 
 #print(f"Received {data!r}")
+
+# print(subprocess.run(['lynx', '-stdin', '-dump'], input=html, capture_output=True, text=True).stdout)
