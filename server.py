@@ -40,9 +40,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             grouped_data = [new_data[i:i+254] for i in range(0, len(new_data), 254)]
             print(f"Grouped_data: {grouped_data}")
 
-            dns_answer = DNSRecord(DNSHeader(id=dns_request.header.id,
-                                   qr=1,ra=1,aa=1),
-                                    q=dns_request.q)
+            dns_answer = dns_request.reply()
             for group in grouped_data:
                 dns_answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
                 # Not send all just send back same request
