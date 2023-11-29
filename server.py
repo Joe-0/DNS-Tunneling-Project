@@ -20,7 +20,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
     subdomain_check = ""
     while True:
-        
+
         # changed to recvfrom to get src addr
         data, addr = s.recvfrom(1024)
         #print(f"Received: {data} from {addr}")
@@ -36,16 +36,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             new_subdomain = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):] # reinsert dots to url
             print(f"New_sub: {new_subdomain}")
             new_data = get_html(new_subdomain)
-        
+
             grouped_data = [new_data[i:i+254] for i in range(0, len(new_data), 254)]
             print(f"Grouped_data: {grouped_data}")
             for group in grouped_data:
-                answer = DNSRecord.reply()
-                answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
+                dns_answer = DNSRecord(DNSHeader(id=dns_request.header.id,
+                                   bitmap=dns_request.header.bitmap,
+                                   qr=1,ra=1,aa=1),
+                                    q=dns_request.q)
+                dns_answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
                 # Not send all just send back same request
-                print(f"answer: {answer}")
+                print(f"answer: {dns_answer}")
                 print(f"addr: {addr}")
-                s.sendto(answer.pack(), addr)
+                s.sendto(dns_answer.pack(), addr)
 
         if not data:
             break
@@ -58,4 +61,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 # Running terminal commands: https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
 # Preview HTML in Terminal: https://askubuntu.com/questions/58416/how-can-i-preview-html-documents-from-the-command-line
 
-# split html into gorups of 254: https://stackoverflow.com/questions/43982938/split-string-into-groups-of-3-characters
+# split html into gorups of 254: https://stackoverflow.com/questions/43982940/split-string-into-groups-of-3-characters
