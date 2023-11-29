@@ -36,7 +36,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             new_subdomain = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):] # reinsert dots to url
             new_data = get_html(new_subdomain)
         
-        grouped_data = [new_data[i:i+254] for i in range(0, len(s), 254)]
+        grouped_data = [new_data[i:i+254] for i in range(0, len(new_data), 254)]
 
         for group in grouped_data:
             answer = dns_request.reply()
