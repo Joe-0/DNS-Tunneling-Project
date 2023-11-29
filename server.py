@@ -30,19 +30,22 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         url = str(dns_request.q.qname)
 
         subdomain = (url.split('.')[0]).lower()
-
+        print(subdomain)
         if subdomain != subdomain_check:
             subdomain_check = subdomain
             new_subdomain = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):] # reinsert dots to url
+            print(f"New_sub: {new_subdomain}")
             new_data = get_html(new_subdomain)
         
-        grouped_data = [new_data[i:i+254] for i in range(0, len(new_data), 254)]
-
-        for group in grouped_data:
-            answer = dns_request.reply()
-            answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
-            # Not send all just send back same request
-            s.sendto(answer, addr)
+            grouped_data = [new_data[i:i+254] for i in range(0, len(new_data), 254)]
+            print(f"Grouped_data: {grouped_data}")
+            for group in grouped_data:
+                answer = DNSRecord.reply()
+                answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
+                # Not send all just send back same request
+                print(f"answer: {answer}")
+                print(f"addr: {addr}")
+                s.sendto(answer.pack(), addr)
 
         if not data:
             break
