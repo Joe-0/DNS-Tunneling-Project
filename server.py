@@ -34,16 +34,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         if subdomain != subdomain_check:
             subdomain_check = subdomain
             new_subdomain = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):] # reinsert dots to url
-            new_data = bytes(get_html(new_subdomain), 'utf-8')
+            new_data = get_html(new_subdomain)
         
+        grouped_data = [new_data[i:i+254] for i in range(0, len(s), 254)]
+
+        for group in grouped_data:
+            answer = dns_request.reply()
+            answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
+            # Not send all just send back same request
+            s.sendto(answer, addr)
 
         if not data:
             break
-
-        answer = dns_request.reply()
-        answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(new_data),ttl=60))
-        # Not send all just send back same request
-        s.sendto(answer, addr)
 
 # Need to work with DNS
 # dnslib? dnspython?
@@ -52,3 +54,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
 # Running terminal commands: https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
 # Preview HTML in Terminal: https://askubuntu.com/questions/58416/how-can-i-preview-html-documents-from-the-command-line
+
+# split html into gorups of 254: https://stackoverflow.com/questions/43982938/split-string-into-groups-of-3-characters
