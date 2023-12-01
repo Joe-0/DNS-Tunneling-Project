@@ -22,11 +22,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         print(query)
         
         # Should be same as what was sent
-        data, addr = s.recvfrom(1024)
+        data, addr = s.recvfrom(1500)
         print(f"Received data from {addr}: {data}")
 
         dns_response = DNSRecord.parse(data)
         print(f"DNS Data: {dns_response}")
+
+        for rr in dns_response.rr:
+            print(f"TXT Record: {rr.rdata.data}")
 
 
         if user_input == "":
