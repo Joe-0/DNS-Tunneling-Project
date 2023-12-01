@@ -14,7 +14,7 @@ PORT = 53  # The port used by the server
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     while True:
         user_input = input("Please enter then data to send: ")
-        query = DNSRecord.question(user_input + "." + URL)
+        query = DNSRecord.question(user_input + "." + URL, qtype = "TXT")
 
         #.pack to return bytes object can not send a DNSRecord
         s.sendto(query.pack(), (DNS_HOST, PORT)) # need to send the info to a DNS server for this it is google

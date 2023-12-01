@@ -46,7 +46,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
                 # Not send all just send back same request
                 print(f"answer: {dns_answer}")
                 print(f"addr: {addr}")
-                s.sendto(dns_answer.pack(), addr)
+            s.sendto(dns_answer.pack(), addr)
 
         if not data:
             break
