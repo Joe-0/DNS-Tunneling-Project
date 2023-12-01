@@ -37,7 +37,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             print(f"New_sub: {new_subdomain}")
             new_data = get_html(new_subdomain)
 
-            grouped_data = [new_data[i:i+254] for i in range(0, len(new_data), 254)]
+            grouped_data = [new_data[i:i+150] for i in range(0, len(new_data), 150)]
             print(f"Grouped_data: {grouped_data}")
 
             encoded_grouped_data = []
@@ -52,6 +52,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
                 print(f"answer: {dns_answer}")
                 print(f"addr: {addr}")
             s.sendto(dns_answer.pack(), addr)
+            print("Sent")
 
         if not data:
             break
