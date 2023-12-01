@@ -42,10 +42,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
             encoded_grouped_data = []
             for group in grouped_data:
-                encoded_grouped_data.append(base64.b64encode(group))
+                encoded_grouped_data.append(base64.b64encode(bytes(group, "utf-8")))
 
             dns_answer = dns_request.reply()
-            for group in grouped_data:
+            for group in encoded_grouped_data:
                 dns_answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
                 #dns_answer.add_answer(*RR.fromZone(group))
                 # Not send all just send back same request
