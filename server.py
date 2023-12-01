@@ -42,7 +42,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
             dns_answer = dns_request.reply()
             for group in grouped_data:
-                dns_answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
+                #dns_answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
+                dns_answer.add_answer(*RR.fromZone(group))
                 # Not send all just send back same request
                 print(f"answer: {dns_answer}")
                 print(f"addr: {addr}")
