@@ -52,10 +52,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
             # Encode the strings with Base64 and add to data list for subdomain elm in dic
             for group in grouped_data:
-                current_subdomain["data"] += base64.b64encode(bytes(group, "utf-8"))
+                current_subdomain["data"].append(base64.b64encode(bytes(group, "utf-8")))
 
         # Access subdomain elm in dic
         current_subdomain = client_dic[dns_subdomain]
+        print(current_subdomain["data"])
+        print(len(current_subdomain["data"]))
 
         # Check if not at end of subdomain data list, use index key to index into data list
         if current_subdomain["index"] < len(current_subdomain["data"]):
@@ -77,7 +79,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             print("Sent")
 
             # Advance subdomain index for next go around
-            current_subdomain["index"] + 1
+            current_subdomain["index"] = current_subdomain["index"] + 1
         
         # If at end of subdomain data list
         else:
@@ -92,8 +94,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.sendto(dns_answer.pack(), addr)
             print("Sent END reply")
 
-        if not data:
-            break
+        '''if not data:
+            break'''
 
 # Need to work with DNS
 # dnslib? dnspython?
