@@ -5,7 +5,6 @@
 import socket
 from dnslib import *
 import requests
-import keyboard
 
 HOST = "172.26.13.129"  # Standard loopback interface address (localhost)
 PORT = 53  # Port to listen on (non-privileged ports are > 1023)
@@ -15,6 +14,8 @@ def get_html(url):
     r = requests.get("https://" + url)
     return r.text
 
+client_dic = {}
+
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     s.bind((HOST, PORT))
     print(f"Connected by {HOST}, on port: {PORT}")
@@ -22,21 +23,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     subdomain_check = ""
     while True:
 
-        # Auto close socket for easier testing
-        event = keyboard.read_event()
-        if event.event_type == keyboard.KEY_DOWN and event.name == 'q':
-            break
-        
         # changed to recvfrom to get src addr
         data, addr = s.recvfrom(1024)
         #print(f"Received: {data} from {addr}")
-
         dns_request = DNSRecord.parse(data)
-
         url = str(dns_request.q.qname)
-
         subdomain = (url.split('.')[0]).lower()
         print(subdomain)
+
         if subdomain != subdomain_check:
             subdomain_check = subdomain
             new_subdomain = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):] # reinsert dots to url
@@ -66,8 +60,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 # Need to work with DNS
 # dnslib? dnspython?
 #172-26-13-129
-
-# Keyboard library for closing socket: https://github.com/boppreh/keyboard#invoking-code-when-an-event-happens
 
 # Longer TXT Record: https://repost.aws/knowledge-center/route-53-configure-long-spf-txt-records
 
