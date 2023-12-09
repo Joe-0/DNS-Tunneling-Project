@@ -5,11 +5,12 @@
 import socket
 from dnslib import *
 import requests
+import keyboard
 
 HOST = "172.26.13.129"  # Standard loopback interface address (localhost)
 PORT = 53  # Port to listen on (non-privileged ports are > 1023)
 
-
+# Get HTML test of page
 def get_html(url):
     r = requests.get("https://" + url)
     return r.text
@@ -21,6 +22,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     subdomain_check = ""
     while True:
 
+        # Auto close socket for easier testing
+        event = keyboard.read_event()
+        if event.event_type == keyboard.KEY_DOWN and event.name == 'q':
+            break
+        
         # changed to recvfrom to get src addr
         data, addr = s.recvfrom(1024)
         #print(f"Received: {data} from {addr}")
@@ -45,12 +51,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
                 encoded_grouped_data.append(base64.b64encode(bytes(group, "utf-8")))
 
             dns_answer = dns_request.reply()
-            for group in encoded_grouped_data:
-                dns_answer.add_answer(RR(url,QTYPE.TXT,rdata=TXT(group),ttl=60))
-                #dns_answer.add_answer(*RR.fromZone(group))
-                # Not send all just send back same request
-                print(f"answer: {dns_answer}")
-                print(f"addr: {addr}")
+            #for group in encoded_grouped_data:
+            dns_answer.add_answer(RR(url, QTYPE.TXT, rdata=TXT(encoded_grouped_data), ttl=60))
+            #dns_answer.add_answer(*RR.fromZone(group))
+            # Not send all just send back same request
+            print(f"answer: {dns_answer}")
+            print(f"addr: {addr}")
             s.sendto(dns_answer.pack(), addr)
             print("Sent")
 
@@ -61,6 +67,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 # dnslib? dnspython?
 #172-26-13-129
 
+# Keyboard library for closing socket: https://github.com/boppreh/keyboard#invoking-code-when-an-event-happens
 
 # Running terminal commands: https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
 # Preview HTML in Terminal: https://askubuntu.com/questions/58416/how-can-i-preview-html-documents-from-the-command-line
