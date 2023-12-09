@@ -47,6 +47,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             grouped_data = [html_data[i:i+150] for i in range(0, len(html_data), 150)]
             print(f"Grouped_data: {grouped_data}")
 
+            # Access subdomain elm in dic
+            current_subdomain = client_dic[dns_subdomain]
+
             # Encode the strings with Base64 and add to data list for subdomain elm in dic
             for group in grouped_data:
                 current_subdomain["data"] += base64.b64encode(bytes(group, "utf-8"))
