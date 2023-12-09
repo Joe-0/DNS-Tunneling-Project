@@ -69,6 +69,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
 # Keyboard library for closing socket: https://github.com/boppreh/keyboard#invoking-code-when-an-event-happens
 
+# Longer TXT Record: https://repost.aws/knowledge-center/route-53-configure-long-spf-txt-records
+
 # Running terminal commands: https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
 # Preview HTML in Terminal: https://askubuntu.com/questions/58416/how-can-i-preview-html-documents-from-the-command-line
 
