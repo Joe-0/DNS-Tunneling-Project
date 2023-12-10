@@ -4,6 +4,7 @@
 
 import socket
 from dnslib import *
+import subprocess
 
 SERVER_IP = "54.225.14.129"
 URL = "a.unsatisfiable.net"  # The server's hostname or IP address (will need to be domain name)
@@ -11,6 +12,22 @@ DNS_HOST = "8.8.8.8"
 PORT = 53  # The port used by the server
 
 html_data = []
+
+def get_unique(lst):
+    """
+    Get the unique values from a given list in order
+
+    Args:
+        lst: A list of values
+    
+    Returns:
+        return_list: A list of all unique values in lst
+    """
+    return_list = []
+    for elm in lst:
+        if elm not in return_list:
+            return_list.append(elm)
+    return return_list
 
 # Had to change SCOK_STREAM to SOCK_DGRAM to fix broken pipe error
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -50,8 +67,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         else:
             break
 
-    print(html_data)
+    # Get all the unique strings in list
+    unique_html_data_list = get_unique(html_data)
 
-#print(f"Received {data!r}")
+    # Combine HTML list into one string
+    unique_html_data_string = ''.join(unique_html_data_list)
 
-# print(subprocess.run(['lynx', '-stdin', '-dump'], input=html, capture_output=True, text=True).stdout)
+    # Show the HTML code in terminal using lynx
+    print(subprocess.run(['lynx', '-stdin', '-dump'], input=unique_html_data_string, capture_output=True, text=True).stdout)
+
+# Running terminal commands: https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
+# Preview HTML in Terminal: https://askubuntu.com/questions/58416/how-can-i-preview-html-documents-from-the-command-line
+# Lynx main page: https://lynx.invisible-island.net/
