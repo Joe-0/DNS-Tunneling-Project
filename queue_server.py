@@ -69,7 +69,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             group_to_send = current_subdomain["data"][current_subdomain["index"]]
 
             # Add TXT record to reply response
-            dns_answer.add_answer(RR(url, QTYPE.TXT, rdata=TXT(group_to_send), ttl=60))
+            dns_answer.add_answer(RR(url, QTYPE.TXT, rdata=TXT(group_to_send), ttl = 0))
 
             print(f"answer: {dns_answer}")
             print(f"addr: {addr}")
@@ -88,14 +88,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             dns_answer = dns_request.reply()
 
             # Send "END" for client to stop sending requests
-            dns_answer.add_answer(RR(url, QTYPE.TXT, rdata=TXT("END"), ttl=60))
+            dns_answer.add_answer(RR(url, QTYPE.TXT, rdata=TXT(base64.b64encode(bytes("END", "utf-8"))), ttl = 0))
 
             # Send packed reply response
             s.sendto(dns_answer.pack(), addr)
             print("Sent END reply")
-
-        '''if not data:
-            break'''
 
 # Need to work with DNS
 # dnslib? dnspython?

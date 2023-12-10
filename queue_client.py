@@ -10,7 +10,7 @@ URL = "a.unsatisfiable.net"  # The server's hostname or IP address (will need to
 DNS_HOST = "8.8.8.8"
 PORT = 53  # The port used by the server
 
-html_data = ""
+html_data = []
 
 # Had to change SCOK_STREAM to SOCK_DGRAM to fix broken pipe error
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -44,21 +44,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         if txt_string != "END":
 
             # Append DNS response data to html string
-            html_data = html_data + txt_string
+            html_data.append(txt_string)
 
         # If string in TXT record is "END" print the html data
         else:
-            for htlm_string in html_data:
-                print(htlm_string)
-
             break
 
-
-    '''        if user_input == "":
-                break
-            
-
-        s.close()'''
+    print(html_data)
 
 #print(f"Received {data!r}")
 
