@@ -11,7 +11,15 @@ PORT = 53  # Port to listen on (non-privileged ports are > 1023)
 
 # Get HTML test of page
 def get_html(subdomain):
+    """
+    Get the HTML code of a given website
 
+    Args:
+        subdomain: The name of the website to get (eg "google")
+    
+    Returns:
+        r.text: A string of the HTML code of website
+    """
     # Reinsert dots to url to get HTML data
     url = subdomain[:3] + "." + subdomain[3:(len(subdomain)-3)] + "." + subdomain[(len(subdomain)-3):]
     print(f"New_sub: {url}")
@@ -100,8 +108,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
 # Can use this to send 2 answers at a time (optimization)
 # Longer TXT Record: https://repost.aws/knowledge-center/route-53-configure-long-spf-txt-records
-
-# Running terminal commands: https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
-# Preview HTML in Terminal: https://askubuntu.com/questions/58416/how-can-i-preview-html-documents-from-the-command-line
 
 # split html into groups of 254: https://stackoverflow.com/questions/43982940/split-string-into-groups-of-3-characters
