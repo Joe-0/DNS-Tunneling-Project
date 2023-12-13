@@ -1,13 +1,16 @@
-# Code from https://realpython.com/python-sockets/#echo-server used
-
-# echo-server.py
+# queue_server.py
+# Author: Joe Stearns
+# Date: Dec, 2023
+#
+# Code used for DNS tunneling, will get HTML data from page and send back to client
+#
 
 import socket
 from dnslib import *
 import requests
 
-HOST = "172.26.13.129"  # Standard loopback interface address (localhost)
-PORT = 53  # Port to listen on (non-privileged ports are > 1023)
+HOST = "172.26.13.129"  # IP for AWS instance
+PORT = 53  # Port to listen on
 
 # Get HTML test of page
 def get_html(subdomain):
@@ -38,11 +41,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
         # Get subdomain from DNS request
         data, addr = s.recvfrom(1024)
-        #print(f"Received: {data} from {addr}")
         dns_request = DNSRecord.parse(data)
         url = str(dns_request.q.qname)
         dns_subdomain = (url.split('.')[0]).lower()
-        print(dns_subdomain)
 
         # If first time request create new elm in dic
         if dns_subdomain not in client_dic:
@@ -64,8 +65,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
         # Access subdomain elm in dic
         current_subdomain = client_dic[dns_subdomain]
-        print(current_subdomain["data"])
-        print(len(current_subdomain["data"]))
 
         # Check if not at end of subdomain data list, use index key to index into data list
         if current_subdomain["index"] < len(current_subdomain["data"]):
@@ -101,12 +100,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             # Send packed reply response
             s.sendto(dns_answer.pack(), addr)
             print("Sent END reply")
-
-# Need to work with DNS
-# dnslib? dnspython?
-#172-26-13-129
-
-# Can use this to send 2 answers at a time (optimization)
-# Longer TXT Record: https://repost.aws/knowledge-center/route-53-configure-long-spf-txt-records
-
-# split html into groups of 254: https://stackoverflow.com/questions/43982940/split-string-into-groups-of-3-characters
