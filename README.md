@@ -1,5 +1,5 @@
 # CS330 Final Project, Joe Stearns, 2023
-**This code requires [Lynx](https://github.com/ThomasDickey/lynx-snapshots) and [dnslib](https://pypi.org/project/dnslib/) to run
+**This code requires [Lynx](https://github.com/ThomasDickey/lynx-snapshots) and [dnslib](https://pypi.org/project/dnslib/) to run**
 
 ## queue_server.py
 **This is the final version of server code**
