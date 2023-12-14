@@ -36,7 +36,7 @@ def get_unique(lst):
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
     # Prompt user to input website
-    user_input = input("Please enter then data to send (Do not include \".\" e.g. wwwgooglecom): ")
+    user_input = input("Please enter the website to request (Do not include \".\" e.g. wwwgooglecom): ")
     while True:
         query = DNSRecord.question(user_input + "." + URL, qtype = "TXT")
 
