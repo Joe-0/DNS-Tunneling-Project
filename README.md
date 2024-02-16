@@ -1,5 +1,8 @@
 # CS330 Final Project, Joe Stearns, 2023
 **This code requires [Lynx](https://github.com/ThomasDickey/lynx-snapshots) and [dnslib](https://pypi.org/project/dnslib/) to run**
+**This code will require some modifications to work:**
+1. Change 'HOST' variable in queue_server.py to the IP address of the server that will run the code
+2. Change 'URL' variable in queue_client.py to the URL of the hostname of the server
 
 ## queue_server.py
 **This is the final version of server code**
